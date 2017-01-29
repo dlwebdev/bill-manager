@@ -1,0 +1,44 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div id="Header" class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Bill Management System</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a class="close-hamburger-on-click" [routerLink]="['/home']">HOME</a></li>
+        <li><a class="close-hamburger-on-click" [routerLink]="['/bills']">BILLS</a></li>
+        <li><a class="close-hamburger-on-click" [routerLink]="['/about-us']">ABOUT</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="!userLoggedIn">
+          <a class="close-hamburger-on-click" [routerLink]="['login']">Login</a>
+        </li>
+        <li *ngIf="userLoggedIn" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span *ngIf="hasNotifications" class="alerts">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            </span>
+            Your Account <span class="caret"></span></a>
+
+          <ul class="dropdown-menu">
+            <li><a class="close-hamburger-on-click" [routerLink]="['/settings']">Settings</a></li>
+            <li><a class="close-hamburger-on-click" [ngClass]="{'has-notifications': hasNotifications }" [routerLink]="['/notifications']">Notifications</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a class="close-hamburger-on-click" href="/api/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="main_content_wrapper" class="container-fluid">
+  <router-outlet (notifyAllRead)="OnNotifyAllRead($event)"></router-outlet>
+</div>

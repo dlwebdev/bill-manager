@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="row pad-top sidebar-row">
+
+    <div class="col-xs-3 col-md-2 sidebar">
+      <bill-sidebar></bill-sidebar>
+    </div>
+
+    <div class="col-xs-8 col-xs-offset-4 col-md-9 col-md-offset-3 main">
+
+      <div *ngIf="isLoading" class="loading-container">
+        <img src="/assets/images/gears.gif" alt="Loading bills">
+      </div>
+
+    	<div *ngIf="!isLoading">
+
+        <div *ngIf="!hasBills" class="no-bills-image-div text-center">
+          <img src="/assets/images/clipart-huppy1.png" alt="No Bills" />
+          <br>
+          <h2 class="text-important">Good job, all bills paid!</h2>
+        </div>
+
+        <div *ngIf="hasBills" class="list-group bill-list">
+          <h1>Pay a Bill</h1>
+          
+          <p>Select a bill to pay it</p>
+
+          <hr>
+
+      		<div *ngFor="let bill of billsUnpaid" (click)="payBill(bill._id)" class="list-group-item row">
+            <h4 class="list-group-item-heading">{{ bill.name }}</h4>
+            <p class="list-group-item-text">
+              Amount Due: {{ bill.amount | currency:'USD':true }}
+              <br>
+              Due this month on: {{ bill.customDueDate | date: 'MMM dd, yyyy' }}
+            </p>
+            <button type="button" class="btn btn-success pull-right">Pay</button>
+      		</div>
+        </div>
+
+    	</div>
+    </div>
+  </div>
+</div>

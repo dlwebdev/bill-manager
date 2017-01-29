@@ -1,0 +1,24 @@
+.login-icons .col-xs-4 {
+  text-align: center;
+}
+
+.login-icons img {
+  max-height: 130px;
+  max-width: 130px;
+}
+
+.login-wrapper {
+  background: #e3e3d3;
+  padding: 25px;
+  border-radius: 10px;
+  border: 2px solid #101010;
+  cursor: pointer;
+  display: block;
+  max-width: 225px;
+  max-height: 200px;
+  margin: 0 auto;
+}
+
+.login-wrapper:hover {
+  background: #ccccbf;
+}
