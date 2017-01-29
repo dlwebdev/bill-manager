@@ -36,7 +36,7 @@ passport.deserializeUser(function(obj, cb) {
 passport.use(new BitbucketStrategy({
      consumerKey: 'KXdEjPnxCESujBtC2U',
      consumerSecret: '4bQTwXXR9cpZ3p9EDvps6W7G8qc2E2SE',
-     callbackURL: "https://weber-justin-bms.herokuapp.com/callback"
+     callbackURL: "https://weber-justin-bms.herokuapp.com/auth/bitbucket/callback"
   },
   function(token, tokenSecret, profile, cb) {
 
