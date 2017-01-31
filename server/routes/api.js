@@ -152,7 +152,7 @@ router.post('/bills/payment', function(req, res) {
 
 // Route for getting Payments from the payments database
 router.get('/payments/', function(req, res) {
-  Payment.find({}, function (err, payments) {
+  Payment.find({user_id: req.user._id}, function (err, payments) {
       if(err) console.log('Err: ', err);
       res.json(payments);
   });
