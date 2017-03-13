@@ -1,4 +1,3 @@
-// Get dependencies
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -9,6 +8,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const BitbucketStrategy = require('passport-bitbucket').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 
 
 const MongoStore = require('connect-mongo')(session);
@@ -73,6 +73,47 @@ passport.use(new BitbucketStrategy({
   }
 ));
 
+
+passport.use(new TwitterStrategy({
+    consumerKey: 'GxwxeStKsYqKjhpzYS7Ag8X25',
+    consumerSecret: 'AKt7uqDgHjDpMpQwbwWbDwQNgzqTnPTu1EdQUrpBTqQsm2ezF7',
+    callbackURL: "http://192.168.100.100:4200/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, cb) {
+    User.findOne({ twitterId: profile.id }, function (err, user) {
+      // if there is an error, stop everything and return that
+      // ie an error connecting to the database
+      if (err)
+          return done(err);
+
+      // if the user is found then log them in
+      if (user) {
+          return cb(err, user);
+      } else {
+          // if there is no user, create them
+          let user = new User();
+          user.twitterId = profile.id;
+
+          // set all of the user data that we need
+          //user.bitbucket.id          = profile.id;
+          //user.bitbucket.token       = token;
+          //user.bitbucket.username    = profile.username;
+
+          // save our user into the database
+          user.save(function(err) {
+              if (err)
+                  throw err;
+
+              return cb(err, user);
+          });
+      }
+
+    });
+
+  }
+));
+
+
 const app = express();
 
 // Parsers for POST data
@@ -82,7 +123,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Set up a mlab account to use for mongodb. Connect to that db.
-mongoose.connect('mongodb://admin:admin@ds025449.mlab.com:25449/justin-weber-bms'); // Connect to MongoDB database for polling app.
+mongoose.connect('mongodb://admin:admin@ds035593.mlab.com:35593/bms'); // Connect to MongoDB database for polling app.
 
 // Make sure mongod is running! If not, log an error and exit.
 mongoose.connection.on('error', function() {
@@ -125,6 +166,24 @@ app.get('/auth/bitbucket/callback',
     res.redirect('/bills');
   });
 
+
+
+app.get('/auth/twitter',
+  passport.authenticate('twitter'));
+
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+
+    // Do notification check
+    NotificationChecker.checkForNotifications(req);
+
+    res.redirect('/bills');
+  });
+
+
+
 // Set our api routes
 app.use('/api', api);
 
@@ -136,7 +195,7 @@ app.get('*', (req, res) => {
 /**
  * Get port from environment and store in Express.
  */
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '4200';
 app.set('port', port);
 
 /**

@@ -8,6 +8,7 @@ const Schema = mongoose.Schema;
 // User model
 const userSchema = new Schema({
   bitbucketId: String,
+  twitterId: String,
   daysBeforeNotice: Number
 });
 
